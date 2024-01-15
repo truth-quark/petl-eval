@@ -54,3 +54,5 @@ processed_table = petl.convert(tokenised_tag_table, "date", date_parser)
 processed_table = petl.convert(tokenised_tag_table, "end_date", date_parser)
 print(processed_table)
 
+print("Exporting tokenised tag table (not date converted)")
+petl.tojson(tokenised_tag_table, "/tmp/output.json", lines=True)
