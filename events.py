@@ -17,6 +17,15 @@ TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>[W]?)\]"
 NA = ""
 
 
+def event_classifier(title):
+    activities = []
+    if "MTB" in title:
+        activities.append("MTB")
+    if "Bushwalk" in title:
+        activities.append("Bushwalking")
+    return activities if activities else ""
+
+
 # TODO: test the following
 # load raw data
 # split data into relevant category strings (do regex funcs work?)
@@ -46,7 +55,10 @@ tokenised_tag_table = petl.capture(tokenised_raw_tag_table,
                                    ["distance", "difficulty", "wet"],
                                    fill=(NA, NA, NA))
 
-print(tokenised_tag_table)
+tokenised_activity_tag_table = petl.addfield(tokenised_tag_table,
+                                             "activities",
+                                             lambda rec: event_classifier(rec["title"]))
+print(tokenised_activity_tag_table)
 
 # convert dates
 date_parser = petl.dateparser("%d/%m/%Y")
@@ -55,4 +67,4 @@ processed_table = petl.convert(tokenised_tag_table, "end_date", date_parser)
 print(processed_table)
 
 print("Exporting tokenised tag table (not date converted)")
-petl.tojson(tokenised_tag_table, "/tmp/output.json", lines=True)
+petl.tojson(tokenised_activity_tag_table, "/tmp/output.json", lines=True)
