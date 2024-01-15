@@ -10,6 +10,12 @@ TRIP_TITLE_PATTERN = r"^(?P<date>\d{1,2}\/\d{1,2}\/\d{4})" \
                      r"[ to]*(?P<end_date>\d{1,2}\/\d{1,2}\/\d{4}){0,1} - " \
                      r"(?P<title>[!&/+,\w\'\"\(\) ]*[a-zA-Z0-9])[ ]?(?P<tags>\[.*\])?$"
 
+TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>[W]?)\]"
+
+
+# constants
+NA = ""
+
 
 # TODO: test the following
 # load raw data
@@ -28,5 +34,14 @@ tokenised_table = petl.capture(raw_table,
                                TRIP_TITLE_PATTERN,
                                ["date", "end_date", "title", "raw_tags"])
 
-print(tokenised_table)
+# replace None in raw tags with "-" to prevent future regex failure
+tokenised_raw_tag_table = petl.convert(tokenised_table, "raw_tags", lambda v: v if v else NA)
+print(tokenised_raw_tag_table)
 
+tokenised_tag_table = petl.capture(tokenised_raw_tag_table,
+                                   "raw_tags",
+                                   TAG_PATTERN,
+                                   ["distance", "difficulty", "wet"],
+                                   fill=(NA, NA, NA))
+
+print(tokenised_tag_table)
