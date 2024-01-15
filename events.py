@@ -60,10 +60,9 @@ tokenised_activity_tag_table = petl.addfield(tokenised_tag_table,
                                              lambda rec: event_classifier(rec["title"]))
 print(tokenised_activity_tag_table)
 
-# convert dates
+# convert dates in functional chained form
 date_parser = petl.dateparser("%d/%m/%Y")
-processed_table = petl.convert(tokenised_tag_table, "date", date_parser)
-processed_table = petl.convert(tokenised_tag_table, "end_date", date_parser)
+processed_table = (petl.convert(tokenised_activity_tag_table, "date", date_parser).convert("end_date", date_parser))
 print(processed_table)
 
 print("Exporting tokenised tag table (not date converted)")
