@@ -21,6 +21,8 @@ NA = ""
 # load raw data
 # split data into relevant category strings (do regex funcs work?)
 # transform relevant fields (e.g. dates)
+# error check date order
+# classify event by keyword / add activity compound field
 # save to JSON lines
 # read in JSON lines data / bypass processing pipeline
 
@@ -34,7 +36,7 @@ tokenised_table = petl.capture(raw_table,
                                TRIP_TITLE_PATTERN,
                                ["date", "end_date", "title", "raw_tags"])
 
-# replace None in raw tags with "-" to prevent future regex failure
+# replace None in raw tags with NA string to prevent future regex failure
 tokenised_raw_tag_table = petl.convert(tokenised_table, "raw_tags", lambda v: v if v else NA)
 print(tokenised_raw_tag_table)
 
@@ -45,3 +47,10 @@ tokenised_tag_table = petl.capture(tokenised_raw_tag_table,
                                    fill=(NA, NA, NA))
 
 print(tokenised_tag_table)
+
+# convert dates
+date_parser = petl.dateparser("%d/%m/%Y")
+processed_table = petl.convert(tokenised_tag_table, "date", date_parser)
+processed_table = petl.convert(tokenised_tag_table, "end_date", date_parser)
+print(processed_table)
+
