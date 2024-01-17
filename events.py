@@ -67,11 +67,33 @@ tokenised_tag_table = petl.capture(tokenised_raw_tag_table,
 tokenised_activity_tag_table = petl.addfield(tokenised_tag_table,
                                              "activities",
                                              lambda rec: event_classifier(rec["title"]))
-print(tokenised_activity_tag_table)
 
-# convert dates in functional chained form
+# perform date ETL operations in chained/functional form
+# fill missing dates where multiple events fall on the same day
+# add date validation fields
+
+def check_prev_date(previous, current, _):
+    """True if current event starts after the last event (may occur on same day)"""
+    if previous is None:
+        return None
+
+    if previous.end_date:
+        # verify current event doesn't start before or during previous event
+        return current.date > previous.date and current.date >= previous.end_date
+
+    return current.date >= previous.date
+
+
 date_parser = petl.dateparser("%d/%m/%Y")
-processed_table = (petl.convert(tokenised_activity_tag_table, "date", date_parser).convert("end_date", date_parser))
+processed_table = (petl
+                   .convert(tokenised_activity_tag_table, "date", date_parser)
+                   .convert("end_date", date_parser)
+                   .filldown("date")
+                   .addfieldusingcontext("starts_after_last", check_prev_date))
+
+print("Full form data")
+print(petl.lookall(processed_table))
+print("\nShort form data")
 print(processed_table)
 
 print("Exporting tokenised tag table (not date converted)")
