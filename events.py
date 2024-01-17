@@ -102,8 +102,8 @@ processed_table = (petl
 # validate against data constraints
 constraints = [
     dict(name="Dates Chronologically Ordered", field="is_ordered", assertion=lambda x: x is not False),
-    dict(name="distance_valid_cat", field="distance", test=lambda x: x in "SMLX" or x == ""),
-    dict(name="distance_valid_cat", field="difficulty", test=lambda x: x in "EMHX" or x == "")
+    dict(name="distance_valid", field="distance", test=lambda x: x in "SMLX" or x == ""),
+    dict(name="difficulty_valid", field="difficulty", test=lambda x: x in "EMHX" or x == "")
 ]
 
 error_table = petl.validate(processed_table, constraints=constraints)
