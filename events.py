@@ -89,7 +89,8 @@ processed_table = (petl
                    .convert(tokenised_activity_tag_table, "date", date_parser)
                    .convert("end_date", date_parser)
                    .filldown("date")
-                   .addfieldusingcontext("starts_after_last", check_prev_date))
+                   .addfieldusingcontext("is_ordered", check_prev_date)
+                   .movefield("is_ordered", 2))
 
 print("Full form data")
 print(petl.lookall(processed_table))
