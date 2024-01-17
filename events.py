@@ -35,14 +35,14 @@ def event_classifier(title):
     return [kw for kw in EVENT_ACTIVITY_KEYWORDS if kw.lower() in title.lower()] or None
 
 
-# TODO: test the following
-# load raw data
+# TODO: implement the following steps to assess petl library (ignoring architecture)
+# DONE load raw data
 # split data into relevant category strings (do regex funcs work?)
-# transform relevant fields (e.g. dates)
+# DONE transform relevant fields (e.g. dates)
+# DONE classify event by keyword / add activity compound field
 # error check date order
-# classify event by keyword / add activity compound field
-# save to JSON lines
-# read in JSON lines data / bypass processing pipeline
+# PART save to JSON lines
+# read in JSON lines (data index) / bypass processing pipeline
 
 data_path = sys.argv[1]
 assert os.path.exists(data_path)
