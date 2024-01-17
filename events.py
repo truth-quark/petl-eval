@@ -28,15 +28,11 @@ TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>[W]?)\]"
 
 # constants
 NA = ""
+EVENT_ACTIVITY_KEYWORDS = ("MTB", "Bushwalk")
 
 
 def event_classifier(title):
-    activities = []
-    if "MTB" in title:
-        activities.append("MTB")
-    if "Bushwalk" in title:
-        activities.append("Bushwalking")
-    return activities if activities else ""
+    return [kw for kw in EVENT_ACTIVITY_KEYWORDS if kw.lower() in title.lower()] or None
 
 
 # TODO: test the following
