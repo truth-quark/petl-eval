@@ -29,6 +29,13 @@ TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>[W]?)\]"
 # constants
 NA = ""
 EVENT_ACTIVITY_KEYWORDS = ("MTB", "Bushwalk")
+PETL_OUTPUT_KEY = "PETL_OUTPUT"
+
+# configure output file
+if PETL_OUTPUT_KEY in os.environ:
+    petl_output_path = os.environ[PETL_OUTPUT_KEY]
+else:
+    petl_output_path = None
 
 
 def event_classifier(title):
@@ -40,8 +47,8 @@ def event_classifier(title):
 # split data into relevant category strings (do regex funcs work?)
 # DONE transform relevant fields (e.g. dates)
 # DONE classify event by keyword / add activity compound field
-# error check date order
-# PART save to JSON lines
+# DONE error check date order
+# DONE save to JSON lines
 # read in JSON lines (data index) / bypass processing pipeline
 
 data_path = sys.argv[1]
@@ -114,5 +121,12 @@ if n_errors:
 print("\nShort form data")
 print(processed_table)
 
-print("Exporting tokenised tag table (not date converted)")
-petl.tojson(tokenised_activity_tag_table, "/tmp/output.json", lines=True)
+# export to JSON
+# HACK: convert dates to strs on the fly to facilitate JSON export...
+if petl_output_path:
+    print(f"\nExporting processed table to JSON {petl_output_path}")
+    print(petl.convert(processed_table, "date", str)
+          .convert("end_date", str)
+          .tojson(petl_output_path, lines=True))
+
+    assert os.path.exists(petl_output_path)
