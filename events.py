@@ -101,10 +101,16 @@ constraints = [
 
 error_table = petl.validate(processed_table, constraints=constraints)
 
+# display rough summary of data
 print("Full form data")
 print(petl.lookall(processed_table))
-print("\nError report table")
-print(error_table)
+
+n_errors = len(error_table)-1  # header counts for
+
+if n_errors:
+    print(f"\nError report table (errors={n_errors})")
+    print(error_table)
+
 print("\nShort form data")
 print(processed_table)
 
