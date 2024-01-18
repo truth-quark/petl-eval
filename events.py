@@ -6,24 +6,17 @@ import sys
 import petl
 
 # regexes
-TRIP_TITLE_PATTERN = r"^(?P<date>\d{1,2}\/\d{1,2}\/\d{4})" \
-                     r"[ to]*(?P<end_date>\d{1,2}\/\d{1,2}\/\d{4}){0,1} - " \
-                     r"(?P<title>[!&/+,\w\'\"\(\) ]*[a-zA-Z0-9])[ ]?(?P<tags>\[.*\])?$"
 
 # petl runs strip() so leading whitespace is cleared
 # pattern covers some fiddly cases:
-# line 1: optionally find leading hyphen then space (pattern for 2nd event within a date), then a date
-# line 2: differentiate between "DATE to DATE" for multi day event
-# line 3: handle residual " - " between dates & titles OR the 2nd event in a day pattern
-# line 4: extract event title
-# line 5: extract optional tag block within "[]" section
-EVENT_TITLE_PATTERN = r"^(?:- )?(?P<date>\d{1,2}\/\d{1,2}\/\d{4})?" \
-                      r" ?(?:to|-)? (?P<end>\d{1,2}\/\d{1,2}\/\d{4})?" \
-                      r"(?:[ ]?- )?" \
+# line 1: handle leading "- " (strip() prefix for 2nd event within a day) or a date/date to date range
+# line 2: extract event title
+# line 3: extract optional tag block within "[]" section
+EVENT_TITLE_PATTERN = r"^(?:(?:- )|(?:(?P<date>\d{1,2}\/\d{1,2}\/\d{4})(?: to (?P<end>\d{1,2}\/\d{1,2}\/\d{4}))? - ))" \
                       r"(?P<title>[\w ]*)" \
                       r"(?P<tags>\[[\w,\/\s]+])?"
 
-TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>[W]?)\]"
+TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>W?)\]"
 
 
 # constants
