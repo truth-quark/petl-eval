@@ -105,7 +105,7 @@ error_table = petl.validate(processed_table, constraints=constraints)
 print("Full form data")
 print(petl.lookall(processed_table))
 
-n_errors = len(error_table)-1  # header counts for
+n_errors = len(error_table)-1  # header counts for one row
 
 if n_errors:
     print(f"\nError report table (errors={n_errors})")
