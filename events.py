@@ -13,7 +13,7 @@ import petl
 # line 2: extract event title
 # line 3: extract optional tag block within "[]" section
 EVENT_TITLE_PATTERN = r"^(?:(?P<date>\d{1,2}\/\d{1,2}\/\d{4})(?: to (?P<end>\d{1,2}\/\d{1,2}\/\d{4}))? )?(?:- )" \
-                      r"(?P<title>[\w ]*)" \
+                      r"(?P<title>[\w &/()-]*)" \
                       r"(?P<tags>\[[\w,\/\s]+])?"
 
 TAG_PATTERN = r"\[(?P<distance>[SML])/(?P<difficulty>[EMR])(?P<wet>W?)\]"
