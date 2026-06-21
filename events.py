@@ -46,7 +46,7 @@ def event_classifier(title):
 data_path = sys.argv[1]
 assert os.path.exists(data_path)
 
-raw_table = petl.fromtext(data_path)
+raw_table = petl.fromtext(data_path).search(EVENT_TITLE_PATTERN)
 
 tokenised_table = petl.capture(raw_table,
                                "lines",
