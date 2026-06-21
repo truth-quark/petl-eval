@@ -1,5 +1,7 @@
 """
 Quick and dirty evaluation of petl's ETL features.
+
+Explore how the library works, ignoring good software design.
 """
 import os
 import sys
@@ -35,14 +37,11 @@ def event_classifier(title):
     return [kw for kw in EVENT_ACTIVITY_KEYWORDS if kw.lower() in title.lower()] or None
 
 
-# TODO: implement the following steps to assess petl library (ignoring architecture)
-# DONE load raw data
+# TODO: implement the following steps to assess petl library features
 # split data into relevant category strings (do regex funcs work?)
-# DONE transform relevant fields (e.g. dates)
-# DONE classify event by keyword / add activity compound field
-# DONE error check date order
-# DONE save to JSON lines
-# read in JSON lines (data index) / bypass processing pipeline
+#
+# read JSON lines (as data index) / bypass processing pipeline by opening structured
+# text instead of semi-structured text inputs
 
 data_path = sys.argv[1]
 assert os.path.exists(data_path)
