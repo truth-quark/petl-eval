@@ -54,7 +54,12 @@ tokenised_table = petl.capture(raw_table,
                                ["date", "end_date", "title", "raw_tags"])
 
 # replace None in raw tags with NA string to prevent future regex failure
-tokenised_raw_tag_table = petl.convert(tokenised_table, "raw_tags", lambda v: v if v else NA)
+# also strip title of trailing spaces
+tokenised_raw_tag_table = (petl
+                           .convert(tokenised_table, "raw_tags", lambda v: v if v else NA)
+                           .convert("title", str.strip))
+
+print("tokenised_raw_tag_table:")
 print(petl.lookall(tokenised_raw_tag_table))
 
 tokenised_tag_table = petl.capture(tokenised_raw_tag_table,
